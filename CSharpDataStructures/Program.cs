@@ -8,19 +8,44 @@ namespace CSharpDataStructures
     {
         static void Main(string[] args)
         {
-            CustomStack<string> cs = new CustomStack<string>();
-            for (int i = 10; i < 101; i++)
+            CustomQueue<int> cq = new CustomQueue<int>();
+            for (int i = 1; i < 66; i++)
             {
-                cs.Push("Test" + i);
-            }
-            LogList(cs);
-
-            for (int i = 10; i < 101; i++)
-            {
-                cs.Pop();
+                cq.Enqueue(i);
             }
 
-            Console.WriteLine(cs.Peek());
+            LogList(cq);
+            Console.WriteLine("-----Dequeue");
+            for (int i = 1; i < 33; i++)
+            {
+                Console.WriteLine(cq.Dequeue());
+            }
+            Console.WriteLine("-----Dequeue");
+
+            Console.WriteLine();
+
+            Console.WriteLine("-----Enqueue");
+            for (int i = 1; i < 33; i++)
+            {
+                cq.Enqueue(i);
+            }
+            LogList(cq);
+            Console.WriteLine("-----Enqueue");
+
+
+            //CustomStack<string> cs = new CustomStack<string>();
+            //for (int i = 10; i < 101; i++)
+            //{
+            //    cs.Push("Test" + i);
+            //}
+            //LogList(cs);
+
+            //for (int i = 10; i < 101; i++)
+            //{
+            //    cs.Pop();
+            //}
+
+            //Console.WriteLine(cs.Peek());
 
 
             //CustomLinkedList<string> customLinkedList = new CustomLinkedList<string>();
