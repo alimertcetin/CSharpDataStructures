@@ -8,6 +8,21 @@ namespace CSharpDataStructures
     {
         static void Main(string[] args)
         {
+            CustomStack<string> cs = new CustomStack<string>();
+            for (int i = 10; i < 101; i++)
+            {
+                cs.Push("Test" + i);
+            }
+            LogList(cs);
+
+            for (int i = 10; i < 101; i++)
+            {
+                cs.Pop();
+            }
+
+            Console.WriteLine(cs.Peek());
+
+
             //CustomLinkedList<string> customLinkedList = new CustomLinkedList<string>();
             //for (int i = 0; i < 10; i++)
             //{
@@ -21,19 +36,19 @@ namespace CSharpDataStructures
 
             //LogList(customLinkedList);
 
-            CustomHashSet<string> customHashSet = new CustomHashSet<string>(1);
-            customHashSet.Add("Test");
-            customHashSet.Add("Test2");
-            customHashSet.Add("Test3");
-            customHashSet.Add("Test4");
+            //CustomHashSet<string> customHashSet = new CustomHashSet<string>(1);
+            //customHashSet.Add("Test");
+            //customHashSet.Add("Test2");
+            //customHashSet.Add("Test3");
+            //customHashSet.Add("Test4");
 
-            customHashSet.Add("Test");
-            customHashSet.Add("1");
-            customHashSet.Add("2");
-            customHashSet.Add("3");
-            customHashSet.Add("4");
+            //customHashSet.Add("Test");
+            //customHashSet.Add("1");
+            //customHashSet.Add("2");
+            //customHashSet.Add("3");
+            //customHashSet.Add("4");
 
-            LogList(customHashSet);
+            //LogList(customHashSet);
 
             //if (customHashSet.Contains("Test"))
             //{

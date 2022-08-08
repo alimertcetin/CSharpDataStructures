@@ -4,20 +4,15 @@ using System.Collections.Generic;
 
 namespace XIV.DataStructures
 {
-    public class CustomStack<T> : IList<T>
+    public class CustomStack<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
     {
         T[] values;
         int length;
 
-        public T this[int index]
-        {
-            get => values[index];
-            set => values[index] = value;
-        }
-
         public int Count => length;
-        public int Capacity => values.Length;
         public bool IsReadOnly => values.IsReadOnly;
+        public bool IsSynchronized => values.IsSynchronized;
+        public object SyncRoot => values.SyncRoot;
 
         public CustomStack()
         {
@@ -29,20 +24,9 @@ namespace XIV.DataStructures
             values = new T[count];
         }
 
-        public void Add(T item)
-        {
-            if (length == values.Length)
-            {
-                Array.Resize(ref values, values.Length * 2);
-            }
-
-            values[length++] = item;
-        }
-
         public void Clear()
         {
-            values = new T[2];
-            length = 0;
+            Array.Clear(values, 0, values.Length);
         }
 
         public bool Contains(T item)
@@ -62,51 +46,6 @@ namespace XIV.DataStructures
             values.CopyTo(array, arrayIndex);
         }
 
-        public int IndexOf(T item)
-        {
-            for (int i = 0; i < length; i++)
-            {
-                if (values[i].Equals(item))
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        public void Insert(int index, T item)
-        {
-            if (length == values.Length)
-            {
-                Array.Resize(ref values, values.Length * 2);
-            }
-
-            for (int i = length; i >= index; i--)
-            {
-                values[i] = values[i - 1];
-            }
-            length++;
-            values[index] = item;
-        }
-
-        public bool Remove(T item)
-        {
-            var index = IndexOf(item);
-            if (index < 0) return false;
-
-            RemoveAt(index);
-            return true;
-        }
-
-        public void RemoveAt(int index)
-        {
-            for (int i = index; i < length - 1; i++)
-            {
-                values[i] = values[i + 1];
-            }
-            length--;
-        }
-        
         public void Push(T item)
         {
         	if (length == values.Length)
@@ -116,11 +55,16 @@ namespace XIV.DataStructures
 
             values[length++] = item;
         }
-        
+
         public T Pop()
         {
-        	return values[length--];
+            var item = values[--length];
+            // https://github.com/microsoft/referencesource/blob/master/System/compmod/system/collections/generic/stack.cs - 227
+            values[length] = default(T); // Free memory quicker.
+            return item;
         }
+
+        public T Peek() => values[length];
 
         public void TrimExcess()
         {
@@ -133,18 +77,20 @@ namespace XIV.DataStructures
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        public IEnumerator<T> GetEnumerator() => new CustomListEnumerator(this);
+        public IEnumerator<T> GetEnumerator() => new CustomStackEnumerator(this);
 
-        public struct CustomListEnumerator : IEnumerator<T>
+        public void CopyTo(Array array, int index) => values.CopyTo(array, index);
+
+        public struct CustomStackEnumerator : IEnumerator<T>
         {
             public int currentIndex;
-            public T Current => list[currentIndex];
+            public T Current => list.values[currentIndex];
 
             object IEnumerator.Current => Current;
 
             CustomStack<T> list;
 
-            public CustomListEnumerator(CustomStack<T> list)
+            public CustomStackEnumerator(CustomStack<T> list)
             {
                 this.list = list;
                 currentIndex = list.Count;
