@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace XIV.DataStructures.Extentions
+namespace XIV.DataStructures.Utils
 {
     public static class ArrayUtils
     {

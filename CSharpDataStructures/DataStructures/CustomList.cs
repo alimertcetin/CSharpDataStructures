@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace XIV.DataStructures
 {
@@ -115,6 +116,41 @@ namespace XIV.DataStructures
                 valueArray[i] = values[i];
             }
             values = valueArray;
+        }
+
+        public void Sort(Comparison<T> comparison)
+        {
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    if (comparison.Invoke(values[i], values[j]) < 0)
+                    {
+                        (values[i], values[j]) = (values[j], values[i]);
+                        i--;
+                        break;
+                    }
+                }
+            }
+        }
+
+        public void Sort(IComparer<T> comparer)
+        {
+            int loopCount = 0;
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    if(comparer.Compare(values[i], values[j]) < 0)
+                    {
+                        (values[i], values[j]) = (values[j], values[i]);
+                        i--;
+                        break;
+                    }
+                    loopCount++;
+                }
+            }
+            Console.WriteLine("Looped : " + loopCount);
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

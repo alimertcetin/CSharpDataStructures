@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using XIV.DataStructures;
+using XIV.SortingAlgorithms;
 
 namespace CSharpDataStructures
 {
@@ -8,29 +9,29 @@ namespace CSharpDataStructures
     {
         static void Main(string[] args)
         {
-            CustomQueue<int> cq = new CustomQueue<int>();
-            for (int i = 1; i < 66; i++)
-            {
-                cq.Enqueue(i);
-            }
+            //CustomQueue<int> cq = new CustomQueue<int>();
+            //for (int i = 1; i < 101; i++)
+            //{
+            //    cq.Enqueue(i);
+            //}
 
-            LogList(cq);
-            Console.WriteLine("-----Dequeue");
-            for (int i = 1; i < 33; i++)
-            {
-                Console.WriteLine(cq.Dequeue());
-            }
-            Console.WriteLine("-----Dequeue");
+            //LogList(cq);
+            //Console.WriteLine("-----Dequeue");
+            //for (int i = 1; i < 69; i++)
+            //{
+            //    Console.WriteLine(cq.Dequeue());
+            //}
+            //Console.WriteLine("-----Dequeue");
 
-            Console.WriteLine();
+            //Console.WriteLine();
 
-            Console.WriteLine("-----Enqueue");
-            for (int i = 1; i < 33; i++)
-            {
-                cq.Enqueue(i);
-            }
-            LogList(cq);
-            Console.WriteLine("-----Enqueue");
+            //Console.WriteLine("-----Enqueue");
+            //for (int i = 1; i < 33; i++)
+            //{
+            //    cq.Enqueue(i);
+            //}
+            //LogList(cq);
+            //Console.WriteLine("-----Enqueue");
 
 
             //CustomStack<string> cs = new CustomStack<string>();
@@ -80,24 +81,56 @@ namespace CSharpDataStructures
             //    Console.WriteLine("Test exists");
             //}
 
-            //CustomList<string> customList = new CustomList<string>();
-            //customList.Add("Ali");
-            //customList.Add("Oruç");
+            Random rnd = new System.Random(100);
 
+            string[] nameArr = new string[]
+            {
+                "Uğur", "Deniz", "Hakan", "Oğuzhan", "Ömer", "Ali",
+                "Yağmur", "Damla", "Merve", "Selin", "Selma", "Aslı"
+            };
+
+            //CustomList<Person> customList = new CustomList<Person>();
+
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    string rndName = nameArr[rnd.Next(0, nameArr.Length)];
+            //    uint rndAge = (uint)rnd.Next(0, 91);
+            //    var person = new Person(rndName, rndAge);
+            //    customList.Add(person);
+            //}
+
+            //// Sort using delegate System.Comparsion<T>
+            ////customList.Sort((Person left, Person right) => (int)(left.age - right.age));
+            //// Sort using custom class that implements the IComparer<T> interface
+            //customList.Sort(new PersonAgeComparer(false));
             //LogList(customList);
-            //Console.WriteLine("Capacity : " + customList.Capacity);
 
-            //customList.Add("Mehmet");
-            //customList.Add("Ahmet");
+            const int arrLength = 5;
+            Person[] arr = new Person[arrLength];
 
-            //LogList(customList);
-            //Console.WriteLine("Capacity : " + customList.Capacity);
-            //customList.Insert(2, "Rıza");
+            for (int i = 0; i < arrLength; i++)
+            {
+                string rndName = nameArr[rnd.Next(0, nameArr.Length)];
+                uint rndAge = (uint)rnd.Next(0, 91);
+                var person = new Person(rndName, rndAge);
+                arr[i] = person;
+            }
+            //for (int i = 0; i < arrLength; i++)
+            //{
+            //    var swapIdxFirst = rnd.Next(0, arrLength);
+            //    var swapIdxSecond = rnd.Next(0, arrLength);
+            //    (arr[swapIdxFirst], arr[swapIdxSecond]) = (arr[swapIdxSecond], arr[swapIdxFirst]);
+            //}
 
-            //customList.Add("Fatih");
-            //LogList(customList);
-            //Console.WriteLine("Capacity : " + customList.Capacity);
 
+            Console.WriteLine("Unsorted");
+            LogList(arr);
+            Console.WriteLine();
+            Console.WriteLine("Heap Sorted");
+            //HeapSorting.Sort(arr, arrLength, (Person x, Person y) => (int)(y.age - x.age));
+            HeapSorting.Sort(arr, arrLength);
+
+            LogList(arr);
 
             //var list = new RefIndexerList<int>();
             //for (int i = 0; i <= 100; i++)
