@@ -95,8 +95,8 @@ namespace XIV.SortingAlgorithms
         {
             int loopCount = 0;
 
-            int depthMiddle = itemCount / 2 - 1;
-            for (int i = depthMiddle; i >= 0; i--)
+            int middle = itemCount / 2 - 1;
+            for (int i = middle; i >= 0; i--)
             {
                 Heapify(arr, itemCount, i, comparison, ref loopCount);
             }
