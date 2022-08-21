@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 // https://www.tutorialspoint.com/heap-sort-in-chash#
 namespace XIV.SortingAlgorithms
@@ -44,6 +45,48 @@ namespace XIV.SortingAlgorithms
             {
                 (arr[currentIndex], arr[parentIndex]) = (arr[parentIndex], arr[currentIndex]);
                 Heapify(arr, itemCount, parentIndex, ref loopCount);
+            }
+        }
+
+        public static void Sort<T>(T[] arr, int itemCount, IComparer<T> comparer)
+        {
+            int loopCount = 0;
+
+            int middle = itemCount / 2 - 1;
+            for (int i = middle; i >= 0; i--)
+            {
+                Heapify(arr, itemCount, i, comparer, ref loopCount);
+            }
+
+            for (int i = itemCount - 1; i >= 0; i--)
+            {
+                (arr[0], arr[i]) = (arr[i], arr[0]);
+                Heapify(arr, i, 0, comparer, ref loopCount);
+            }
+            Console.WriteLine("Looped : " + loopCount);
+        }
+
+        static void Heapify<T>(T[] arr, int itemCount, int currentIndex, IComparer<T> comparer, ref int loopCount)
+        {
+            loopCount++;
+            int parentIndex = currentIndex;
+            int left = 2 * currentIndex + 1;
+            int right = 2 * currentIndex + 2;
+
+            if (left < itemCount && comparer.Compare(arr[left], arr[parentIndex]) > 0)
+            {
+                parentIndex = left;
+            }
+
+            if (right < itemCount && comparer.Compare(arr[right], arr[parentIndex]) > 0)
+            {
+                parentIndex = right;
+            }
+
+            if (parentIndex != currentIndex)
+            {
+                (arr[currentIndex], arr[parentIndex]) = (arr[parentIndex], arr[currentIndex]);
+                Heapify(arr, itemCount, parentIndex, comparer, ref loopCount);
             }
         }
 
