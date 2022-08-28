@@ -1,6 +1,8 @@
 ﻿using CSharpDataStructures.DataStructureUsages;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CSharpDataStructures
 {
@@ -19,12 +21,33 @@ namespace CSharpDataStructures
                 new CustomDictionaryUsage(),
             };
 
-
-            foreach (DataStructureUsage structureUsage in structureUsages)
+            Input input = new Input();
+            Thread inputThread = new Thread(() =>
             {
-                structureUsage.Main();
-            }
+                while (true)
+                {
+                    input.InputUpdate();
+                }
+            });
+            inputThread.IsBackground = true;
+            inputThread.Start();
 
+            while (true)
+            {
+                if (input.GetKeyDown(ConsoleKey.Escape))
+                {
+                    break;
+                }
+
+                foreach (DataStructureUsage structureUsage in structureUsages)
+                {
+                    structureUsage.Main();
+                }
+
+                input.ClearInputData(); //race condition
+                Thread.Sleep(500);
+            }
+            Console.WriteLine("Loop ended");
             Console.ReadKey();
         }
     }

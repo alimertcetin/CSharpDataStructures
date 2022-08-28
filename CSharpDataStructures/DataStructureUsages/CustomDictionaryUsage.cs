@@ -24,43 +24,43 @@ namespace CSharpDataStructures.DataStructureUsages
             // -------------
 
             // ------------- XIV.DataStructures.CustomDictionary
-            var customDictionary = new CustomDictionary<int, string>(8);
-            customDictionary.Add(1, "NULL");
-            Write("Key 1 added with NULL value");
-            LogList(customDictionary);
+            //var customDictionary = new CustomDictionary<int, string>(8);
+            //customDictionary.Add(1, "NULL");
+            //Write("Key 1 added with NULL value");
+            //LogList(customDictionary);
 
-            customDictionary.Remove(1);
-            Write("Key 1 removed");
-            LogList(customDictionary);
+            //customDictionary.Remove(1);
+            //Write("Key 1 removed");
+            //LogList(customDictionary);
 
-            //var customValues = customDictionary.Values; // Not implemented yet
-            //var customKeys = dictionary.Keys; // Not implemented yet
+            ////var customValues = customDictionary.Values; // Not implemented yet
+            ////var customKeys = dictionary.Keys; // Not implemented yet
 
-            bool customFound = customDictionary.TryGetValue(1, out var customVal);
-            if (customFound) Write("1 found, Value is : " + customVal);
-            else Write("Couldnt find 1");
+            //bool customFound = customDictionary.TryGetValue(1, out var customVal);
+            //if (customFound) Write("1 found, Value is : " + customVal);
+            //else Write("Couldnt find 1");
 
-            customDictionary.Clear();
-            Write("Dictionary cleared");
-            LogList(customDictionary);
+            //customDictionary.Clear();
+            //Write("Dictionary cleared");
+            //LogList(customDictionary);
 
-            bool customIsKeyExists = customDictionary.ContainsKey(1);
-            Write("Is key 1 exists : " + customIsKeyExists);
+            //bool customIsKeyExists = customDictionary.ContainsKey(1);
+            //Write("Is key 1 exists : " + customIsKeyExists);
 
-            bool customIsValueExists = customDictionary.ContainsValue("NULL");
-            Write("Is value NULL exists : " + customIsValueExists);
+            //bool customIsValueExists = customDictionary.ContainsValue("NULL");
+            //Write("Is value NULL exists : " + customIsValueExists);
 
-            //bool customIsAdded = customDictionary.TryAdd(1, "NULL"); // Not implemented
-            int customKeyCount = customDictionary.Count;
-            Write("Key Count : " + customKeyCount);
+            ////bool customIsAdded = customDictionary.TryAdd(1, "NULL"); // Not implemented
+            //int customKeyCount = customDictionary.Count;
+            //Write("Key Count : " + customKeyCount);
 
-            for (int i = 0; i < 100; i++)
-            {
-                customDictionary.Add(i, "NULL-" + i);
-            }
+            //for (int i = 0; i < 600; i++)
+            //{
+            //    customDictionary.Add(i, "NULL-" + i);
+            //}
 
-            customDictionary[1] = "NULL";
-            LogList(customDictionary);
+            //customDictionary[1] = "NULL";
+            //LogList(customDictionary);
         }
     }
 }

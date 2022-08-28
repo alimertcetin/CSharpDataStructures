@@ -40,15 +40,15 @@ namespace XIV.DataStructures
         IEnumerable<KeyValuePair<TKey, TValue>>, 
         IEnumerable, 
         IDictionary<TKey, TValue>, 
-        IReadOnlyCollection<KeyValuePair<TKey, TValue>>
-        //IReadOnlyDictionary<TKey, TValue>, 
+        IReadOnlyCollection<KeyValuePair<TKey, TValue>>,
+        IReadOnlyDictionary<TKey, TValue>
         //ICollection, 
         //IDictionary, 
         //IDeserializationCallback, 
         //ISerializable where TKey : notnull
     {
         const int BucketCount = 8;
-        const int DefaultBucketSize = 8;
+        const int DefaultBucketSize = 0;
 
         BucketData<TKey, TValue>[] buckets;
 
@@ -56,14 +56,65 @@ namespace XIV.DataStructures
 
         public bool IsReadOnly => throw new NotImplementedException();
 
-        // TODO : Use comparer
-        //IEqualityComparer comparer;
-
         #region IDictionary<TKey, TValue> implementation
 
-        public ICollection<TKey> Keys => throw new NotImplementedException();
+        KeyCollection keys;
 
-        public ICollection<TValue> Values => throw new NotImplementedException();
+        public KeyCollection Keys
+        {
+            get
+            {
+                if (keys == null) keys = new KeyCollection(this);
+                return keys;
+            }
+        }
+
+        ICollection<TKey> IDictionary<TKey, TValue>.Keys
+        {
+            get
+            {
+                if (keys == null) keys = new KeyCollection(this);
+                return keys;
+            }
+        }
+
+        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys
+        {
+            get
+            {
+                if (keys == null) keys = new KeyCollection(this);
+                return keys;
+            }
+        }
+
+        ValueCollection values;
+
+        public ValueCollection Values
+        {
+            get
+            {
+                if (values == null) values = new ValueCollection(this);
+                return values;
+            }
+        }
+
+        ICollection<TValue> IDictionary<TKey, TValue>.Values
+        {
+            get
+            {
+                if (values == null) values = new ValueCollection(this);
+                return values;
+            }
+        }
+
+        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values
+        {
+            get
+            {
+                if (values == null) values = new ValueCollection(this);
+                return values;
+            }
+        }
 
         #endregion
 
@@ -100,14 +151,10 @@ namespace XIV.DataStructures
             }
         }
 
-        public CustomDictionary() : this(null, DefaultBucketSize) { }
-        public CustomDictionary(int size) : this(null, size) { }
-        public CustomDictionary(IEqualityComparer comparer) : this (comparer, DefaultBucketSize) { }
+        public CustomDictionary() : this(DefaultBucketSize) { }
 
-        public CustomDictionary(IEqualityComparer comparer, int size)
+        public CustomDictionary(int size)
         {
-            //this.comparer = comparer ?? EqualityComparer<TKey>.Default;
-
             buckets = new BucketData<TKey, TValue>[BucketCount];
             for (int i = 0; i < BucketCount; i++)
             {
@@ -127,6 +174,7 @@ namespace XIV.DataStructures
 
             if (capacity == count)
             {
+                capacity = capacity < 1 ? 1 : capacity;
                 Array.Resize(ref bucket.array, capacity * 2);
             }
 
@@ -205,18 +253,7 @@ namespace XIV.DataStructures
 
         public void Add(KeyValuePair<TKey, TValue> item)
         {
-            ref BucketData<TKey, TValue> bucket = ref GetBucket(item.Key);
-            ref var count = ref bucket.Count;
-            var capacity = bucket.Capacity;
-
-            if (capacity == count)
-            {
-                Array.Resize(ref bucket.array, capacity * 2);
-            }
-
-            bucket.array[count++] = item;
-
-            Count++;
+            this.Add(item.Key, item.Value);
         }
 
         public void Clear()
@@ -374,11 +411,267 @@ namespace XIV.DataStructures
             }
         }
 
-        // [Serializable]
-        // public sealed class KeyCollection : ICollection<TKey>, ICollection, IReadOnlyCollection<TKey>
+        [Serializable]
+        public sealed class KeyCollection : ICollection<TKey>, ICollection, IReadOnlyCollection<TKey>, IEnumerable<TKey>
+        {
+            CustomDictionary<TKey, TValue> customDictionary;
 
-        // [Serializable]
-        // public sealed class ValueCollection : ICollection<TValue>, ICollection, IReadOnlyCollection<TValue>
+            public KeyCollection(CustomDictionary<TKey, TValue> dictionary)
+            {
+                this.customDictionary = dictionary;
+            }
+
+            public int Count => this.customDictionary.Count;
+
+            public bool IsReadOnly => true;
+
+            public bool IsSynchronized => false;
+
+            public object SyncRoot => ((ICollection)customDictionary).SyncRoot;
+
+            public void Add(TKey item)
+            {
+                throw new NotSupportedException("You cant add item to the Key Collection");
+            }
+
+            public void Clear()
+            {
+                throw new NotSupportedException("You cant clear the Key Collection");
+            }
+
+            public bool Contains(TKey value)
+            {
+                return customDictionary.ContainsKey(value);
+            }
+
+            public void CopyTo(TKey[] array, int arrayIndex)
+            {
+                var arrayToMerge = new TKey[customDictionary.Count];
+                int counter = 0;
+                foreach (TKey value in this)
+                {
+                    arrayToMerge[counter++] = value;
+                }
+                Array.Copy(arrayToMerge, 0, array, arrayIndex, counter);
+            }
+
+            public bool Remove(TKey item)
+            {
+                throw new NotSupportedException("You cant remove an item from Value Collection");
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+            public IEnumerator<TKey> GetEnumerator() => new Enumerator(this.customDictionary);
+
+            public void CopyTo(Array array, int index)
+            {
+                var keyArray = array as TKey[];
+                if(keyArray != null)
+                {
+                    CopyTo(keyArray, index);
+                }
+                else
+                {
+                    var objects = array as object[];
+                    if(objects != null)
+                    {
+                        var arrayToMerge = new TKey[customDictionary.Count];
+                        int counter = 0;
+                        foreach (TKey value in this)
+                        {
+                            arrayToMerge[counter++] = value;
+                        }
+                        Array.Copy(arrayToMerge, 0, objects, index, counter);
+                    }
+                }
+            }
+
+            struct Enumerator : IEnumerator<TKey>
+            {
+                public int currentListIndex;
+                public int currentItemIndex;
+
+                public TKey Current => customDictionary.buckets[currentListIndex].array[currentItemIndex].Key;
+
+                object IEnumerator.Current => Current;
+
+                CustomDictionary<TKey, TValue> customDictionary;
+
+                public Enumerator(CustomDictionary<TKey, TValue> customDictionary)
+                {
+                    this.customDictionary = customDictionary;
+                    currentListIndex = -1;
+                    currentItemIndex = -1;
+                }
+
+                public void Dispose()
+                {
+                    customDictionary = null;
+                }
+
+                public bool MoveNext()
+                {
+                    if (currentListIndex < 0)
+                    {
+                        MoveToNextNotNullBucket();
+                    }
+
+                    if (++currentItemIndex < customDictionary.buckets[currentListIndex].Count)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        currentItemIndex = 0;
+                        return MoveToNextNotNullBucket();
+                    }
+                }
+
+                bool MoveToNextNotNullBucket()
+                {
+                    ++currentListIndex;
+                    var length = customDictionary.buckets.Length;
+                    for (int i = currentListIndex; i < length; i++)
+                    {
+                        if (customDictionary.buckets[i].Count > 0)
+                        {
+                            currentListIndex = i;
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                public void Reset()
+                {
+                    currentListIndex = -1;
+                    currentItemIndex = -1;
+                }
+            }
+        }
+
+        [Serializable]
+        public sealed class ValueCollection : ICollection<TValue>, ICollection, IReadOnlyCollection<TValue>, IEnumerable<TValue>
+        {
+            CustomDictionary<TKey, TValue> customDictionary;
+
+            public ValueCollection(CustomDictionary<TKey, TValue> dictionary)
+            {
+                this.customDictionary = dictionary;
+            }
+
+            public int Count => this.customDictionary.Count;
+
+            public bool IsReadOnly => true;
+
+            public bool IsSynchronized => false;
+
+            public object SyncRoot => ((ICollection)customDictionary).SyncRoot;
+
+            public void Add(TValue item)
+            {
+                throw new NotSupportedException("You cant add item to the Value Collection");
+            }
+
+            public void Clear()
+            {
+                throw new NotSupportedException("You cant clear the Value Collection");
+            }
+
+            public bool Contains(TValue value)
+            {
+                return customDictionary.ContainsValue(value);
+            }
+
+            public void CopyTo(TValue[] array, int arrayIndex)
+            {
+                var arrayToMerge = new TValue[customDictionary.Count];
+                int counter = 0;
+                foreach (TValue value in this)
+                {
+                    arrayToMerge[counter++] = value;
+                }
+                Array.Copy(arrayToMerge, 0, array, arrayIndex, counter);
+            }
+
+            public bool Remove(TValue item)
+            {
+                throw new NotSupportedException("You cant remove an item from Value Collection");
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+            public IEnumerator<TValue> GetEnumerator() => new Enumerator(this.customDictionary);
+
+            public void CopyTo(Array array, int index)
+            {
+                throw new NotImplementedException();
+            }
+
+            struct Enumerator : IEnumerator<TValue>
+            {
+                public int currentListIndex;
+                public int currentItemIndex;
+
+                public TValue Current => customDictionary.buckets[currentListIndex].array[currentItemIndex].Value;
+
+                object IEnumerator.Current => Current;
+
+                CustomDictionary<TKey, TValue> customDictionary;
+
+                public Enumerator(CustomDictionary<TKey, TValue> customDictionary)
+                {
+                    this.customDictionary = customDictionary;
+                    currentListIndex = -1;
+                    currentItemIndex = -1;
+                }
+
+                public void Dispose()
+                {
+                    customDictionary = null;
+                }
+
+                public bool MoveNext()
+                {
+                    if (currentListIndex < 0)
+                    {
+                        MoveToNextNotNullBucket();
+                    }
+
+                    if (++currentItemIndex < customDictionary.buckets[currentListIndex].Count)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        currentItemIndex = 0;
+                        return MoveToNextNotNullBucket();
+                    }
+                }
+
+                bool MoveToNextNotNullBucket()
+                {
+                    ++currentListIndex;
+                    var length = customDictionary.buckets.Length;
+                    for (int i = currentListIndex; i < length; i++)
+                    {
+                        if (customDictionary.buckets[i].Count > 0)
+                        {
+                            currentListIndex = i;
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                public void Reset()
+                {
+                    currentListIndex = -1;
+                    currentItemIndex = -1;
+                }
+            }
+        }
 
 
 
