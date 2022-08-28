@@ -11,7 +11,7 @@ namespace CSharpDataStructures.DataStructureUsages
             System.Console.WriteLine("--------- " + this.GetType().Name + " ---------");
         }
 
-        public void LogList<T>(IEnumerable<T> list)
+        public static void LogList<T>(IEnumerable<T> list, bool writeItemCount = false)
         {
             string log = "";
             int count = 0;
@@ -22,7 +22,23 @@ namespace CSharpDataStructures.DataStructureUsages
             }
             Console.WriteLine(log);
             Console.WriteLine();
-            Console.WriteLine("Count : " + count);
+
+            if (writeItemCount)
+            {
+                Console.WriteLine("Count : " + count);
+            }
+        }
+
+        public static void Write(string value, bool writeLine = true)
+        {
+            if (writeLine)
+            {
+                Console.WriteLine(value);
+            }
+            else
+            {
+                Console.Write(value);
+            }
         }
     }
 }
