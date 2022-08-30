@@ -43,7 +43,10 @@ namespace XIV.DataStructures
 
         public void Clear()
         {
-            values = new T[2];
+            for (int i = 0; i < length; i++)
+            {
+                values[i] = default(T);
+            }
             length = 0;
         }
 
