@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using XIV.Console;
 using XIV.Core;
+using XIV.DataStructures.Test;
 
 namespace CSharpDataStructures
 {
@@ -12,15 +13,20 @@ namespace CSharpDataStructures
     {
         static void Main(string[] args)
         {
-            List<DataStructureUsage> structureUsages = new List<DataStructureUsage>
+            //List<DataStructureUsage> structureUsages = new List<DataStructureUsage>
+            //{
+            //    //new CustomHashSetUsage(),
+            //    //new CustomLinkedListUsage(),
+            //    //new CustomListUsage(),
+            //    //new CustomQueueUsage(),
+            //    //new CustomRefIndexerListUsage(),
+            //    //new CustomStackUsage(),
+            //    new CustomDictionaryUsage(),
+            //};
+
+            List<DataStructureTest> structureTests = new List<DataStructureTest>
             {
-                //new CustomHashSetUsage(),
-                //new CustomLinkedListUsage(),
-                //new CustomListUsage(),
-                //new CustomQueueUsage(),
-                //new CustomRefIndexerListUsage(),
-                //new CustomStackUsage(),
-                new CustomDictionaryUsage(),
+                new CustomListTest(),
             };
 
             Input input = new Input();
@@ -43,9 +49,14 @@ namespace CSharpDataStructures
                     break;
                 }
 
-                foreach (DataStructureUsage structureUsage in structureUsages)
+                //foreach (DataStructureUsage structureUsage in structureUsages)
+                //{
+                //    structureUsage.Main();
+                //}
+
+                foreach (DataStructureTest structureTest in structureTests)
                 {
-                    structureUsage.Main();
+                    structureTest.Main();
                 }
 
                 input.ClearInputData(); //race condition
@@ -53,7 +64,7 @@ namespace CSharpDataStructures
                 Thread.Sleep(1000);
 
                 Time.Update();
-                Console.WriteLine("Passed Time -----> " + Time.DeltaTime);
+                Console.WriteLine("Passed Time Between Frames -----> " + Time.DeltaTime);
             }
             Console.WriteLine("Loop ended");
             Console.ReadKey();
