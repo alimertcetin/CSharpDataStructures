@@ -4,6 +4,8 @@ using System.Collections.Generic;
 // https://www.tutorialspoint.com/heap-sort-in-chash#
 namespace XIV.SortingAlgorithms
 {
+    using Console = System.Console;
+
     public static class HeapSorting
     {
         public static void Sort(int[] arr, int itemCount)
