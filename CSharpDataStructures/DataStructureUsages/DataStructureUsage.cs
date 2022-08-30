@@ -1,44 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace CSharpDataStructures.DataStructureUsages
 {
     public abstract class DataStructureUsage
     {
+        static StringBuilder writer = new StringBuilder();
+        static StringBuilder listLogger = new StringBuilder();
 
         public virtual void Main()
         {
-            System.Console.WriteLine("--------- " + this.GetType().Name + " ---------");
+            Write("--------- " + this.GetType().Name + " ---------", 2);
         }
 
         public static void LogList<T>(IEnumerable<T> list, bool writeItemCount = false)
         {
-            string log = "";
-            int count = 0;
+            int itemCount = 0;
             foreach (var item in list)
             {
-                log += item.ToString() + Environment.NewLine;
-                count++;
+                listLogger.Append(item.ToString());
+                listLogger.AppendLine();
+                itemCount++;
             }
-            Console.WriteLine(log);
-            Console.WriteLine();
+            listLogger.AppendLine();
+            Console.WriteLine(listLogger);
 
             if (writeItemCount)
             {
-                Console.WriteLine("Count : " + count);
+                Console.WriteLine("Count : " + itemCount);
             }
+
+            listLogger.Clear();
         }
 
-        public static void Write(string value, bool writeLine = true)
+        public static void Write(string value, int lineSpace = 1)
         {
-            if (writeLine)
+            writer.Append(value);
+            for (int i = 0; i < lineSpace; i++)
             {
-                Console.WriteLine(value);
+                writer.AppendLine();
             }
-            else
-            {
-                Console.Write(value);
-            }
+
+            Console.Write(writer);
+            writer.Clear();
         }
     }
 }
