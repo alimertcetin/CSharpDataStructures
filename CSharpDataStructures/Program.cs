@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using XIV.Console;
+using XIV.Core;
 
 namespace CSharpDataStructures
 {
@@ -33,6 +34,8 @@ namespace CSharpDataStructures
             inputThread.IsBackground = true;
             inputThread.Start();
 
+            Time.Start();
+
             while (true)
             {
                 if (input.GetKeyDown(ConsoleKey.Escape))
@@ -46,7 +49,11 @@ namespace CSharpDataStructures
                 }
 
                 input.ClearInputData(); //race condition
-                Thread.Sleep(500);
+
+                Thread.Sleep(1000);
+
+                Time.Update();
+                Console.WriteLine("Passed Time -----> " + Time.DeltaTime);
             }
             Console.WriteLine("Loop ended");
             Console.ReadKey();
