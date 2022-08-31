@@ -65,6 +65,7 @@ namespace CSharpDataStructures
 
                 Time.Update();
                 Console.WriteLine("Passed Time Between Frames -----> " + Time.DeltaTime);
+                Console.WriteLine("Time Passed Since The Application Start -----> " + Time.TimeSinceStartup);
             }
             Console.WriteLine("Loop ended");
             Console.ReadKey();

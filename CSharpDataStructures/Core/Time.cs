@@ -26,8 +26,9 @@
 
         internal static void Update()
         {
-            deltaTime = stopwatch.ElapsedMilliseconds;
-            deltaTime /= 1000f;
+            deltaTime = stopwatch.ElapsedMilliseconds / 1000f;
+            timeSinceStartup += deltaTime;
+
             stopwatch.Restart();
         }
 
