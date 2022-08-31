@@ -1,29 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using CSharpDataStructures;
+using System.Collections.Generic;
 
 namespace XIV.DataStructures.Test
 {
     public class CustomListTest : DataStructureTest
     {
-        const int maximumItemLimit = 100000000;
+        int maximumItemLimit = 1000000;
 
         public override void Main()
         {
             base.Main();
 
             stopwatch.Start();
-            var list = new List<int>(maximumItemLimit);
+            var list = new List<Person>(maximumItemLimit);
             stopwatch.Stop();
             Write("Generic List creation took : " + ElapsedSeconds);
 
             stopwatch.Restart();
-            var customList = new CustomList<int>(maximumItemLimit);
+            var customList = new CustomList<Person>(maximumItemLimit);
             stopwatch.Stop();
             Write("CustomList creation took : " + ElapsedSeconds);
 
             stopwatch.Restart();
             for (int i = 0; i < maximumItemLimit; i++)
             {
-                list.Add(i);
+                list.Add(new Person());
             }
             stopwatch.Stop();
             Write("Generic List population took : " + ElapsedSeconds);
@@ -31,7 +32,7 @@ namespace XIV.DataStructures.Test
             stopwatch.Restart();
             for (int i = 0; i < maximumItemLimit; i++)
             {
-                customList.Add(i);
+                customList[i] = new Person();
             }
             stopwatch.Stop();
             Write("CustomList population took : " + ElapsedSeconds);
